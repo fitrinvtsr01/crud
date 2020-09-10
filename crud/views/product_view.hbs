@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUD Data Barang</title>
+  <link href="/assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <div class="container">
+    <h2>List Data Barang</h2>
+    <button class="btn btn-success" data-toggle="modal" data-target="#myModalAdd">Tambah Barang</button>
+    <table class="table table-striped" id="mytable">
+      <thead>
+        <tr>
+          <th>ID Barang</th>
+          <th>Nama Barang</th>
+          <th>Harga Barang</th>
+          <th>Stok Barang</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each results}}
+        <tr>
+          <td>{{ id_barang }}</td>
+          <td>{{ nama }}</td>
+          <td>{{ harga }}</td>
+          <td>{{ stok }}</td>
+          <td>
+            <a href="javascript:void(0);" class="btn btn-sm btn-info edit" data-id_barang="{{ id_barang }}"
+              data-nama="{{ nama }}" data-harga="{{ harga }}" data-stok="{{ stok }}">Edit</a>
+            <a href="javascript:void(0);" class="btn btn-sm btn-danger delete"
+              data-id_barang="{{ id_barang }}">Delete</a>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Add New Product Modal-->
+  <form action="/save" method="post">
+    <div class="modal fade" id="myModalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Tambah Barang</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <input type="text" name="nama" class="form-control" placeholder="Nama Barang" required>
+            </div>
+
+            <div class="form-group">
+              <input type="text" name="harga" class="form-control" placeholder="Harga Barang" required>
+            </div>
+
+            <div class="form-group">
+              <input type="text" name="stok" class="form-control" placeholder="Stok Barang" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- Edit Product Modal-->
+  <form action="/update" method="post">
+    <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <input type="text" name="nama" class="form-control nama" placeholder="Nama Barang" required>
+            </div>
+
+            <div class="form-group">
+              <input type="text" name="harga" class="form-control harga" placeholder="Harga Barang" required>
+            </div>
+
+            <div class="form-group">
+              <input type="text" name="stok" class="form-control stok" placeholder="Stok Barang" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <input type="hidden" name="id_barang" class="id_barang">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-primary">Edit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- Delete Product Modal-->
+  <form id="add-row-form" action="/delete" method="post">
+    <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="myModalLabel">Delete Product</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+          </div>
+          <div class="modal-body">
+            <strong>Are You Sure To Delete This Data?</strong>
+          </div>
+          <div class="modal-footer">
+            <input type="hidden" name="id_barang" class="form-control id_barang" required>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-success">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <script src="/assets/js/jquery-3.3.1.js"></script>
+  <script src="/assets/js/bootstrap.js"></script>
+  <script>
+    $(document).ready(function () {
+      //showing data to modal for edit record
+      $('#mytable').on('click', '.edit', function () {
+        var id_barang = $(this).data('id_barang');
+        var nama = $(this).data('nama');
+        var harga = $(this).data('harga');
+        var stok = $(this).data('stok');
+        $('#EditModal').modal('show');
+        $('.nama').val(nama);
+        $('.harga').val(harga);
+        $('.stok').val(stok);
+        $('.id_barang').val(id_barang);
+      });
+      //showing modal for delete record
+      $('#mytable').on('click', '.delete', function () {
+        var id_barang = $(this).data('id_barang');
+        $('#DeleteModal').modal('show');
+        $('.id_barang').val(id_barang);
+      });
+
+    });
+  </script>
+</body>
+
+</html>
